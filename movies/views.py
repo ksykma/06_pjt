@@ -14,10 +14,15 @@ def index(request):
 
 @require_http_methods(['GET', 'POST'])
 def create(request):
+    if not request.user.is_authenticated:
+        return redirect('movies:index')
+
     if request.method == 'POST':
         form = MovieForm(request.POST)
         if form.is_valid():
-            movie = form.save()
+            movie = form.save(commit=False)
+            movie.user = request.user
+            movie.save()
             return redirect('movies:detail', movie.id)
     else:
         form = MovieForm()
@@ -29,26 +34,32 @@ def create(request):
 @require_http_methods(['GET'])
 def detail(request, movie_id):
     movie = Movie.objects.get(id=movie_id)
+    comment_form = CommentForm()
+    comments = movie.comment_set.all()
     context = {
-        'movie':movie
+        'movie':movie,
+        'comments':comments,
+        'comment_form' : comment_form
     }
     return render(request, 'movies/detail.html', context)
 
 @require_http_methods(['GET', 'POST'])
 def update(request, movie_id):
     movie = Movie.objects.get(id=movie_id)
-    if request.method == 'POST':
-        form = MovieForm(request.POST, instance=movie)
-        if form.is_valid():
-            form.save()
-            return redirect('movies:detail', movie_id)
-    else:
-        form = MovieForm(instance=movie)
-    context = {
-        'form':form,
-        'movie':movie
-    }
-    return render(request, 'movies/update.html', context)
+    if movie.user == request.user:
+        if request.method == 'POST':
+            form = MovieForm(request.POST, instance=movie)
+            if form.is_valid():
+                form.save()
+                return redirect('movies:detail', movie_id)
+        else:
+            form = MovieForm(instance=movie)
+        context = {
+            'form':form,
+            'movie':movie
+        }
+        return render(request, 'movies/update.html', context)
+    return redirect('movies:detail', movie_id)
 
 @require_http_methods(['POST'])
 def delete(request, movie_id):
@@ -60,6 +71,7 @@ def delete(request, movie_id):
 def comments_create(request, movie_id):
     if not request.user.is_authenticated:
         return redirect('accounts:login')
+    
     movie = Movie.objects.get(id=movie_id)
     comment_form = CommentForm(request.POST)
     if comment_form.is_valid():

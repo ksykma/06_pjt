@@ -11,10 +11,15 @@
         {% if request.user.is_authenticated %}
             <h1>Hello, {{ request.user }}</h1>
             <p><a href="{% url 'accounts:update' %}">회원정보수정</a></p>
-            <form action="{% url 'accounts:logout' %}">
+            <form action="{% url 'accounts:logout' %}" method='POST'>
                 {% csrf_token %}
                 <input type="submit" value='Logout'>
             </form>
+            <form action="{% url 'accounts:delete' %}" method="POST">
+                {% csrf_token %}
+                <input type="submit" value='회원탈퇴'>
+            </form>
+            <a href="{% url 'accounts:profile' request.user.username %}">내 프로필</a>
         {% else %}
             <p>
             <a href="{% url 'accounts:login' %}">Login</a>

@@ -76,7 +76,7 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     context = {'form':form}
-    return render(request, 'accounts/change_password', context)
+    return render(request, 'accounts/change_password.html', context)
 
 @require_safe
 def profile(request, username):
