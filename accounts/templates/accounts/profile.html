@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ person.username }}님의 프로필</h1>
+<br>
+<p>팔로잉: {{person.followings.all | length}} | 팔로워: {{person.followers.all | length }}</p>
+<br>
+<form action="{% url 'accounts:follow' person.username %}" method="post">
+    {% csrf_token %}
+    {% if user in person.followers.all %}
+        <input type="submit" value='언팔로우'>
+    {% else %}
+        <input type="submit" value='팔로우'>
+    {% endif %}
+</form>
+<hr>
+<h2>{{person.username}}의 게시글</h2>
+<br>
+{% for movie in person.movie_set.all  %}
+    <p>제목: {{movie.title}}</p>
+{% empty %}
+    <p>게시글이 없어요</p>
+{% endfor %}
+
+<h3>{{person.username}}의 댓글</h3>
+<br>
+{% for comment in person.comment_set.all  %}
+    <p>댓글: {{comment.content}}</p>
+{% empty %}
+    <p>댓글이 없어요</p>
+{% endfor %}
+
+<a href="{% url 'movies:index' %}">INDEX</a>
+{% endblock content %}
+
