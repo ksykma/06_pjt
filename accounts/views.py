@@ -14,7 +14,7 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 def login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
-        if form.is_valid:
+        if form.is_valid():
             auth_login(request, form.get_user())
             return redirect('movies:index')
     else:

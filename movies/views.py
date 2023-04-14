@@ -64,8 +64,10 @@ def update(request, movie_id):
 @require_http_methods(['POST'])
 def delete(request, movie_id):
     movie = Movie.objects.get(id=movie_id)
-    movie.delete()
-    return redirect('movies:index')
+    if request.user == movie.user:
+        movie.delete()
+        return redirect('movies:index')
+    return redirect('movies:detail', movie.movie_id)
 
 @require_http_methods(['POST'])
 def comments_create(request, movie_id):

@@ -2,6 +2,7 @@
 {% block content %}
 <h1>DETAIL</h1>
 <hr>
+<a href="{% url 'accounts:profile' movie.user.username %}">{{movie.user}}</a>
 <h3>{{movie.title}}</h3>
 <h5>{{movie.description}}</h5>
 {% if request.user == movie.user %}
