@@ -8,12 +8,24 @@
 </head>
 <body>
     <nav> 
-        <h1>로그인여부</h1>
+        {% if request.user.is_authenticated %}
+            <h1>Hello, {{ request.user }}</h1>
+            <p><a href="{% url 'accounts:update' %}">회원정보수정</a></p>
+            <form action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+                <input type="submit" value='Logout'>
+            </form>
+        {% else %}
+            <p>
+            <a href="{% url 'accounts:login' %}">Login</a>
+            </p>
+            <p>
+            <a href="{% url 'accounts:signup' %}">회원가입</a>
+            </p>
+        {% endif %}
     </nav>
     {% block content %}
     
     {% endblock content %}
-
-
 </body>
 </html>
