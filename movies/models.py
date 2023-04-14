@@ -5,6 +5,7 @@ from django.conf import settings
 class Movie(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies')
+    hate_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='hate_movies')
     title = models.CharField(max_length=20)
     description = models.TextField()
     

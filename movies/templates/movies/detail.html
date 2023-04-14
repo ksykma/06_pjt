@@ -2,9 +2,10 @@
 {% block content %}
 <h1>DETAIL</h1>
 <hr>
-<a href="{% url 'accounts:profile' movie.user.username %}">{{movie.user}}</a>
-<h3>{{movie.title}}</h3>
-<h5>{{movie.description}}</h5>
+<p>작성자 : <a href="{% url 'accounts:profile' movie.user.username %}">{{movie.user}}</a></p>
+<p>좋아요 : {{movie.like_users.all.count}}</p>
+<h3>영화 제목 : {{movie.title}}</h3>
+<p>감상평 : {{movie.description}}</p>
 {% if request.user == movie.user %}
   <a href="{% url 'movies:update' movie.id %}">UPDATE</a>
   <form action="{% url 'movies:delete' movie.id %}" method="POST">

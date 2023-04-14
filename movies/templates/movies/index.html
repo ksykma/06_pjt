@@ -15,6 +15,14 @@
   <input type="submit" value="좋아요">
   {% endif %}
 </form>
+<form action="{% url 'movies:hates' movie.id %}" method="POST">
+  {% csrf_token %}
+  {% if request.user in movie.hate_users.all %}
+  <input type="submit" value="싫어요 취소">
+  {% else %}
+  <input type="submit" value="싫어요">
+  {% endif %}
+</form>
 {% endif %}
 {% endfor %}
 {% endblock content %}

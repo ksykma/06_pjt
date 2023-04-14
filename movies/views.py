@@ -100,3 +100,14 @@ def likes(request, movie_id):
             movie.like_users.add(request.user)
         return redirect('movies:index')
     return redirect('accounts:login')
+
+@require_http_methods(['POST'])
+def hates(request, movie_id):
+    if request.user.is_authenticated:
+        movie = Movie.objects.get(id=movie_id)
+        if movie.hate_users.filter(id=request.user.id).exists():
+            movie.hate_users.remove(request.user)
+        else:
+            movie.hate_users.add(request.user)
+        return redirect('movies:index')
+    return redirect('accounts:login')
